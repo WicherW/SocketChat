@@ -70,7 +70,7 @@ void SocketChat::SetSenderThread(){
 
     while (true) {
 
-        cin >> buffer;
+        getline(cin, buffer);
         message = nickname + ": " + buffer;
 
         int bytesFeedback = sendto(senderSocket, message.c_str(), message.length(), 0, (sockaddr*)&destAddr, sizeof(destAddr));
