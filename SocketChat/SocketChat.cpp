@@ -38,13 +38,12 @@ void SocketChat::TopBar(){
 }
 
 void SocketChat::Shutdown(){
-    WSACleanup();
+    cout << "xd";
 }
 
 void SocketChat::SetSenderThread(){
  
-    int ttl = 1;
-    char iLoopOn = 1;
+    //int ttl = 0;
     string buffer = "";
     string message = "";
     sockaddr_in destAddr;
@@ -57,13 +56,13 @@ void SocketChat::SetSenderThread(){
         cout << "sender: nie udalo sie zrobic socketu ;c" << endl;
         WSACleanup();
     }
-  
-    if (setsockopt(senderSocket, IPPROTO_IP, IP_MULTICAST_TTL, (char*)&ttl, sizeof(ttl)) < 0) {
+
+    /*if (setsockopt(senderSocket, IPPROTO_IP, IP_MULTICAST_TTL, (char*)&ttl, sizeof(ttl)) < 0) {
         cout << "sender: blad ustawienia multicast ttl ;c" << endl;
         closesocket(senderSocket);
         WSACleanup();
         return;
-    }
+    }*/
 
     destAddr.sin_family = AF_INET;
     destAddr.sin_port = htons(PORT);
@@ -90,21 +89,21 @@ void SocketChat::SetRecieverThread(){
     sockaddr_in fromAddr;
     ip_mreq mreq;
     int fromAddrLen;
+    int reuse = 1;
     char buffer[1024];
     string message;
-    int flag_on = 1;
+    
    
-
     recevierSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
     if (recevierSocket == SOCKET_ERROR) {
         cout << "recevier: socket nie dziala ;c" << endl;
     }
 
-    if ((setsockopt(recevierSocket, SOL_SOCKET, SO_REUSEADDR, (char*)&flag_on, sizeof(flag_on))) < 0){
+    if ((setsockopt(recevierSocket, SOL_SOCKET, SO_REUSEADDR, (char*)&reuse, sizeof(reuse))) < 0){
         cout << "recevier: setsockopt SOL_SOCKET, SO_REUSEADDR nie dziala ;c" << endl;
     }
-   
+ 
     mreq.imr_multiaddr.s_addr = inet_addr("239.255.255.255"); 
     mreq.imr_interface.s_addr = INADDR_ANY; 
 
@@ -119,6 +118,8 @@ void SocketChat::SetRecieverThread(){
     bindAddr.sin_port = htons(PORT);
     bindAddr.sin_addr.s_addr = INADDR_ANY;
 
+
+    // bind wrzuca dane ze struktury ktore zawieraja dane konfiguracji
     if (bind(recevierSocket, (sockaddr*)&bindAddr, sizeof(bindAddr)) < 0) {
         cout << "recevier: bindowanie socketu nie dziala ;c" << endl;
         closesocket(recevierSocket);
