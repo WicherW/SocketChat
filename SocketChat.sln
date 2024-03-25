@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SocketChat", "SocketChat\SocketChat.vcxproj", "{05806EA1-EC98-4AC8-9A86-52968D1A3956}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05806EA1-EC98-4AC8-9A86-52968D1A3956}.Debug|x64.ActiveCfg = Debug|x64
+		{05806EA1-EC98-4AC8-9A86-52968D1A3956}.Debug|x64.Build.0 = Debug|x64
+		{05806EA1-EC98-4AC8-9A86-52968D1A3956}.Debug|x86.ActiveCfg = Debug|Win32
+		{05806EA1-EC98-4AC8-9A86-52968D1A3956}.Debug|x86.Build.0 = Debug|Win32
+		{05806EA1-EC98-4AC8-9A86-52968D1A3956}.Release|x64.ActiveCfg = Release|x64
+		{05806EA1-EC98-4AC8-9A86-52968D1A3956}.Release|x64.Build.0 = Release|x64
+		{05806EA1-EC98-4AC8-9A86-52968D1A3956}.Release|x86.ActiveCfg = Release|Win32
+		{05806EA1-EC98-4AC8-9A86-52968D1A3956}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {179BBBE5-B492-4B45-A6A2-EBB5B1BEAB83}
+	EndGlobalSection
+EndGlobal
