@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <mutex>
+#include <vector>
 #include "SocketChat.h"
 #pragma comment(lib,"ws2_32.lib") 
 

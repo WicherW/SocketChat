@@ -2,9 +2,13 @@
 #include "SocketChat.h"
 #include <WinSock2.h>
 #include <iostream>
+#include <mutex>
 #include <WS2tcpip.h>
+#include <vector>
 #pragma comment(lib,"ws2_32.lib") 
 #pragma warning(disable:4996) //przez inet_addr ktore jest przestarzale
+#define ADDRES_MULTICAST "224.123.123.123"
+
 
 using namespace std;
 
@@ -18,7 +22,7 @@ SocketChat::SocketChat(){
     int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (iResult != 0) {
         printf("WSAStartup nie dziala ;c %d\n", iResult);
-        SocketChat::Shutdown();
+        Shutdown();
         exit(0);
     }
 
@@ -41,15 +45,28 @@ void SocketChat::Shutdown(){
     cout << "xd";
 }
 
+void SocketChat::SendMessageToBuffer(string message) {
+
+    lock_guard<mutex> lock(semafor);
+
+    if(messages.size() == MESSAGE_MAX){
+        messages.erase(messages.begin());
+    }
+    messages.push_back(message);
+
+    system("cls");
+    for(int i = 0; i < messages.size(); i++){
+        cout << messages[i] << endl;
+    } 
+}
+
 void SocketChat::SetSenderThread(){
  
-    //int ttl = 0;
     string buffer = "";
     string message = "";
     sockaddr_in destAddr;
     SOCKET senderSocket;
     
-
     senderSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
     if(senderSocket == INVALID_SOCKET){
@@ -57,19 +74,12 @@ void SocketChat::SetSenderThread(){
         WSACleanup();
     }
 
-    /*if (setsockopt(senderSocket, IPPROTO_IP, IP_MULTICAST_TTL, (char*)&ttl, sizeof(ttl)) < 0) {
-        cout << "sender: blad ustawienia multicast ttl ;c" << endl;
-        closesocket(senderSocket);
-        WSACleanup();
-        return;
-    }*/
-
     destAddr.sin_family = AF_INET;
     destAddr.sin_port = htons(PORT);
-    destAddr.sin_addr.s_addr = inet_addr("239.255.255.255");
+    destAddr.sin_addr.s_addr = inet_addr(ADDRES_MULTICAST);
+
 
     while (true) {
-
         getline(cin, buffer);
         message = nickname + ": " + buffer;
 
@@ -103,8 +113,8 @@ void SocketChat::SetRecieverThread(){
     if ((setsockopt(recevierSocket, SOL_SOCKET, SO_REUSEADDR, (char*)&reuse, sizeof(reuse))) < 0){
         cout << "recevier: setsockopt SOL_SOCKET, SO_REUSEADDR nie dziala ;c" << endl;
     }
- 
-    mreq.imr_multiaddr.s_addr = inet_addr("239.255.255.255"); 
+
+    mreq.imr_multiaddr.s_addr = inet_addr(ADDRES_MULTICAST);
     mreq.imr_interface.s_addr = INADDR_ANY; 
 
     if (setsockopt(recevierSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*)&mreq, sizeof(mreq)) < 0) {
@@ -114,6 +124,7 @@ void SocketChat::SetRecieverThread(){
         return;
     }
 
+  
     bindAddr.sin_family = AF_INET;
     bindAddr.sin_port = htons(PORT);
     bindAddr.sin_addr.s_addr = INADDR_ANY;
@@ -127,7 +138,7 @@ void SocketChat::SetRecieverThread(){
         return;
     }
 
-    SocketChat::TopBar();
+    TopBar();
     
     while(true){
 
@@ -140,7 +151,7 @@ void SocketChat::SetRecieverThread(){
         }
         
         message = string(buffer, recvBytes);
-        cout << message << endl;
+        SendMessageToBuffer(message);
     }
 
 }
