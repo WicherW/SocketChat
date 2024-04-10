@@ -20,8 +20,6 @@ public:
 	vector<string> messages;
 	mutex semafor;
 	SocketChat();
-	~SocketChat();
-	void Shutdown();
 	void SetSenderThread();
 	void SetRecieverThread();
 	void SendMessageToBuffer(string message);

@@ -22,7 +22,6 @@ SocketChat::SocketChat(){
     int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (iResult != 0) {
         printf("WSAStartup nie dziala ;c %d\n", iResult);
-        Shutdown();
         exit(0);
     }
 
@@ -33,16 +32,8 @@ SocketChat::SocketChat(){
     senderThread.join();
 }
 
-SocketChat::~SocketChat() {
-    SocketChat::Shutdown();
-}
-
 void SocketChat::TopBar(){
     cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Socket Multicast chat :) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
-}
-
-void SocketChat::Shutdown(){
-    cout << "xd";
 }
 
 void SocketChat::SendMessageToBuffer(string message) {
@@ -130,7 +121,6 @@ void SocketChat::SetRecieverThread(){
     bindAddr.sin_addr.s_addr = INADDR_ANY;
 
 
-    // bind wrzuca dane ze struktury ktore zawieraja dane konfiguracji
     if (bind(recevierSocket, (sockaddr*)&bindAddr, sizeof(bindAddr)) < 0) {
         cout << "recevier: bindowanie socketu nie dziala ;c" << endl;
         closesocket(recevierSocket);
